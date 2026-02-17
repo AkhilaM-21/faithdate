@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) scale(0.5) rotate(0deg);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-20vh) scale(1) rotate(20deg);
+  }
+}
+
+@keyframes floatUpSlow {
+  0% {
+    transform: translateY(100vh) scale(0.8) rotate(-10deg);
+    timeout: 0;
+  }
+
+  100% {
+    transform: translateY(-20vh) scale(1.2) rotate(10deg);
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-150%) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(150%) rotate(20deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-heart {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes collideLeft {
+  0% {
+    transform: translateX(-50px) rotate(-12deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateX(25px) rotate(-8deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateX(15px) rotate(-14deg);
+  }
+
+  100% {
+    transform: translateX(20px) rotate(-12deg);
+    opacity: 1;
+  }
+}
+
+@keyframes collideRight {
+  0% {
+    transform: translateX(50px) rotate(12deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateX(-25px) rotate(8deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateX(-15px) rotate(14deg);
+  }
+
+  100% {
+    transform: translateX(-20px) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #ffd700;
+  animation: confetti-fall 3s linear infinite;
+}
+
+.confetti-piece:nth-child(2n) {
+  background-color: #ff69b4;
+}
+
+.confetti-piece:nth-child(3n) {
+  background-color: #00bfff;
+}
+
+.confetti-piece:nth-child(4n) {
+  background-color: #32cd32;
+}
+
+.animate-collide-left {
+  animation: collideLeft 1s ease-out forwards, pulse-heart 2s infinite ease-in-out 1s;
+}
+
+.animate-collide-right {
+  animation: collideRight 1s ease-out forwards, pulse-heart 2s infinite ease-in-out 1s;
+}
+
+.animate-slide-out-left {
+  animation: slideOutLeft 0.5s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-pulse-heart {
+  animation: pulse-heart 2s infinite ease-in-out;
+}
+
+.animate-pulse-heart-delayed {
+  animation: pulse-heart 2s infinite ease-in-out 1s;
+}
+
+.clip-heart {
+  clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
+  transform: scale(3.5);
+  /* Scale up the path to fill the 24x24 box coordinate system */
+  transform-origin: center;
+}
