@@ -69,9 +69,9 @@ const TopBar = ({ onFilterClick, user }) => {
         {/* Profile */}
         <Link to="/profile" className="p-2 text-gray-600 hover:text-pink-600 transition-colors">
           {user?.photos?.[0]?.url ? (
-            <img src={user.photos[0].url} alt="Profile" className="w-6 h-6 rounded-full object-cover border border-gray-200" />
+            <img src={user.photos[0].url} alt="Profile" className="w-8 h-8 rounded-full object-cover border-2 border-gray-200" />
           ) : (
-            <img src="/assets/icons/icon-user.png" alt="Profile" className="w-6 h-6 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+            <img src="/assets/icons/nav-profile.png" alt="Profile" className="w-8 h-8 object-contain opacity-70 hover:opacity-100 transition-opacity" />
           )}
         </Link>
       </div>
