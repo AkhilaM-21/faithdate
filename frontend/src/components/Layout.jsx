@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import TopBar from "./TopBar";
 import BottomNav from "./BottomNav";
 import FilterModal from "./FilterModal";
+import { connectSocket, disconnectSocket } from "../services/socket";
+import API from "../services/api";
 
 const Layout = () => {
+  const [user, setUser] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     minAge: 18,
@@ -16,6 +19,25 @@ const Layout = () => {
     radius: 50,
     gender: "",
   });
+
+  // Connect to Socket.IO on mount for real-time notifications
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await API.get("/users/me");
+        setUser(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+      }
+    };
+    fetchUser();
+
+    const socket = connectSocket();
+
+    return () => {
+      // Don't disconnect on unmount — keep socket alive while app is open
+    };
+  }, []);
 
   const handleApplyFilters = (newFilters) => {
     setFilters(newFilters);
@@ -36,13 +58,13 @@ const Layout = () => {
         .animate-slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
       `}</style>
-      <TopBar onFilterClick={() => setIsFilterOpen(true)} />
+      <TopBar onFilterClick={() => setIsFilterOpen(true)} user={user} />
 
       <main className="flex-1 pt-16 pb-16 overflow-y-auto scroll-smooth relative">
         <Outlet context={{ filters }} />
       </main>
 
-      <BottomNav />
+      <BottomNav user={user} />
 
       {/* Backdrop Blur Overlay */}
       {isFilterOpen && (

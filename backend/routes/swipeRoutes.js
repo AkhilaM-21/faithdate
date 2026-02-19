@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const auth = require("../middleware/authMiddleware");
-const { likeUser } = require("../controllers/swipeController");
+const { swipe, rewind } = require("../controllers/swipeController");
 
-router.post("/like", auth, likeUser);
+router.post("/", auth, swipe);
+router.post("/rewind", auth, rewind);
 
 module.exports = router;

@@ -1,0 +1,39 @@
+Connecting to: mongodb+srv://akhila:root@dating.qlqfiji.mongodb.net/users
+Connected to MongoDB
+Total Users in 'users.profile': 205
+Found 5 sample users.
+User: Thomas (699410ee2ddc0e102feebf62)
+  isProfileComplete: true
+  isVisible: undefined
+  isShadowBanned: undefined
+  lastActive: undefined
+  desirabilityScore: undefined
+-------------------------
+User: Kimberly (699410ee2ddc0e102feebf66)
+  isProfileComplete: true
+  isVisible: undefined
+  isShadowBanned: undefined
+  lastActive: undefined
+  desirabilityScore: undefined
+-------------------------
+User: John (699410ee2ddc0e102feebf6a)
+  isProfileComplete: true
+  isVisible: undefined
+  isShadowBanned: undefined
+  lastActive: undefined
+  desirabilityScore: undefined
+-------------------------
+User: Patricia (699410ee2ddc0e102feebf6e)
+  isProfileComplete: true
+  isVisible: undefined
+  isShadowBanned: undefined
+  lastActive: undefined
+  desirabilityScore: undefined
+-------------------------
+User: James (699410ee2ddc0e102feebf72)
+  isProfileComplete: true
+  isVisible: undefined
+  isShadowBanned: undefined
+  lastActive: undefined
+  desirabilityScore: undefined
+-------------------------

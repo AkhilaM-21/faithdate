@@ -7,6 +7,8 @@ export default function ProfileSetup() {
 
   const [form, setForm] = useState({
     bio: "",
+    job: "",
+    education: "",
     relationship_goal: "Marriage",
     denomination: "",
     church_involvement: "Moderate",
@@ -67,7 +69,7 @@ export default function ProfileSetup() {
         <p className="text-gray-500 text-center mb-6">Let's set up your profile to find your match.</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          
+
           {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -132,6 +134,17 @@ export default function ProfileSetup() {
             <textarea name="bio" value={form.bio} onChange={handleChange} required placeholder="Tell us about yourself..." className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none bg-gray-50 h-24 resize-none" />
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">💼 Job Title</label>
+              <input type="text" name="job" value={form.job} onChange={handleChange} placeholder="e.g. Designer" className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none bg-gray-50" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1">🎓 Education</label>
+              <input type="text" name="education" value={form.education} onChange={handleChange} placeholder="e.g. UCLA" className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none bg-gray-50" />
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">Interests (comma separated)</label>
             <input type="text" name="interests" value={form.interests} onChange={handleChange} placeholder="Music, Hiking, Reading" className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none bg-gray-50" />
@@ -147,7 +160,7 @@ export default function ProfileSetup() {
                 </div>
               ))}
             </div>
-            
+
             <input type="file" multiple accept="image/*" onChange={handlePhotoUpload} className="w-full border border-gray-200 p-3 rounded-xl text-sm" />
             <p className="text-xs text-gray-400 mt-1">First photo will be your main profile picture.</p>
           </div>

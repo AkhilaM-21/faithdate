@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { useToast } from "../context/ToastContext";
 
 export default function Community() {
+  const { addToast } = useToast();
   const [posts, setPosts] = useState([]);
   const [content, setContent] = useState("");
   const [type, setType] = useState("Discussion");
@@ -35,7 +37,7 @@ export default function Community() {
       setImage(null);
     } catch (err) {
       console.error("Failed to create post", err);
-      alert("Failed to create post. Please try again.");
+      addToast("Failed to create post. Please try again.", "error");
     }
   };
 
@@ -69,9 +71,9 @@ export default function Community() {
     if (reason) {
       try {
         await API.post(`/community/report/${postId}`, { reason });
-        alert("Thank you. This post has been reported for review.");
+        addToast("Thank you. This post has been reported for review.", "success");
       } catch (error) {
-        alert("Failed to report post.");
+        addToast("Failed to report post.", "error");
       }
     }
   };
@@ -89,11 +91,11 @@ export default function Community() {
           className="w-full p-3 border-none bg-gray-50 rounded-xl focus:ring-0 resize-none"
           rows="3"
         />
-        
+
         {image && (
           <div className="mb-3 relative mt-2">
             <img src={image} alt="Preview" className="w-full h-auto rounded-lg" />
-            <button 
+            <button
               onClick={() => setImage(null)}
               className="absolute top-2 right-2 bg-gray-800 bg-opacity-50 text-white rounded-full p-1 hover:bg-opacity-70"
             >
@@ -106,8 +108,8 @@ export default function Community() {
 
         <div className="flex justify-between items-center mt-3">
           <div className="flex items-center gap-2">
-            <select 
-              value={type} 
+            <select
+              value={type}
               onChange={(e) => setType(e.target.value)}
               className="text-sm border-none bg-transparent font-medium text-gray-600 focus:ring-0"
             >
@@ -122,7 +124,7 @@ export default function Community() {
               </svg>
             </label>
           </div>
-          <button 
+          <button
             onClick={handlePost}
             className="bg-pink-600 text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-pink-700"
           >
@@ -136,23 +138,22 @@ export default function Community() {
         {posts.map(post => (
           <div key={post._id} className="bg-white p-5 rounded-2xl shadow-sm">
             <div className="flex items-center mb-3">
-              <img 
-                src={post.author?.photos?.[0]?.url || "https://via.placeholder.com/40"} 
-                alt="Author" 
+              <img
+                src={post.author?.photos?.[0]?.url || "https://via.placeholder.com/40"}
+                alt="Author"
                 className="w-10 h-10 rounded-full object-cover mr-3"
               />
               <div>
                 <h3 className="font-bold text-gray-800">{post.author?.first_name}</h3>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  post.type === 'Prayer' ? 'bg-blue-100 text-blue-600' : 
-                  post.type === 'Event' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
-                }`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${post.type === 'Prayer' ? 'bg-blue-100 text-blue-600' :
+                    post.type === 'Event' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
+                  }`}>
                   {post.type}
                 </span>
               </div>
             </div>
             <p className="text-gray-700 mb-4">{post.content}</p>
-            
+
             {post.image && (
               <img src={post.image} alt="Post content" className="w-full h-auto rounded-xl mb-4" />
             )}
@@ -175,9 +176,9 @@ export default function Community() {
                 <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
                   {post.comments?.map((comment, i) => (
                     <div key={i} className="flex gap-2 items-start">
-                      <img 
-                        src={comment.author?.photos?.[0]?.url || "https://via.placeholder.com/30"} 
-                        alt="User" 
+                      <img
+                        src={comment.author?.photos?.[0]?.url || "https://via.placeholder.com/30"}
+                        alt="User"
                         className="w-6 h-6 rounded-full object-cover mt-1"
                       />
                       <div className="bg-gray-50 p-2 rounded-lg rounded-tl-none flex-1">
@@ -188,11 +189,11 @@ export default function Community() {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Write a comment..." 
+                    placeholder="Write a comment..."
                     className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-pink-300"
                   />
                   <button onClick={() => handleCommentSubmit(post._id)} className="text-pink-600 font-bold text-sm px-2">Post</button>
