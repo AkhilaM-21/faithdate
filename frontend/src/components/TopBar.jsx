@@ -39,7 +39,7 @@ const TopBar = ({ onFilterClick, user }) => {
   }, [location.pathname]);
 
   return (
-    <header className="fixed top-0 w-full h-16 bg-white shadow-sm z-50 flex items-center justify-between px-4">
+    <header className="fixed top-0 w-full h-16 bg-white shadow-sm z-[200] flex items-center justify-between px-4">
       {/* Left: Filter Icon (Only on Discover) */}
       <div className="w-10">
         {isDiscover && (

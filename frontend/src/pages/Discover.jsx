@@ -253,7 +253,7 @@ export default function Discover() {
 
       {/* Card Stack */}
       {!selectedUser && (
-        <div className="flex justify-center items-center h-full mt-4 pb-28">
+        <div className="flex justify-center items-center h-full pb-20 pt-4">
           {users.length === 0 && (
             <div className="text-center text-gray-400 p-10">
               <p className="text-xl">No more profiles.</p>
@@ -264,7 +264,7 @@ export default function Discover() {
 
           {/* Animation Overlay - Matches Card Dimensions */}
           {currentAction && (
-            <div className="absolute w-[90vw] max-w-sm h-[70vh] z-[200] pointer-events-none overflow-hidden rounded-3xl">
+            <div className="absolute w-[90vw] max-w-sm h-[70vh] z-[200] pointer-events-none">
               {[...Array(10)].map((_, i) => {
                 const size = 24; // Fixed small size
                 const delay = i * 0.1;
