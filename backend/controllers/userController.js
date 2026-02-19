@@ -500,6 +500,42 @@ exports.reportUser = async (req, res) => {
   }
 };
 
+exports.addFavorite = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const currentUser = await User.findById(req.user.id);
+
+    if (!currentUser.favorites.includes(userId)) {
+      currentUser.favorites.push(userId);
+      await currentUser.save();
+      res.json({ msg: "Added to Favorites" });
+    } else {
+      res.json({ msg: "Already in Favorites" });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+};
+
+exports.getFavorites = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate("favorites", "first_name photos location date_of_birth isVerified");
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    // Format for frontend
+    const favorites = user.favorites.map(fav => ({
+      ...fav.toObject(),
+      age: fav.date_of_birth ? Math.abs(new Date(Date.now() - new Date(fav.date_of_birth).getTime()).getUTCFullYear() - 1970) : null
+    }));
+
+    res.json(favorites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+};
+
 exports.deleteAccount = async (req, res) => {
   try {
     const userId = req.user.id;

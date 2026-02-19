@@ -13,6 +13,7 @@ export default function Discover() {
   const [currentAction, setCurrentAction] = useState(null); // 'like', 'dislike', or 'favorite'
   const [removingCard, setRemovingCard] = useState(false); // Track card removal animation
   const childRefs = useRef([]);
+  const clickTimeoutRef = useRef(null); // Fix: Define missing ref for double-tap logic
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -124,22 +125,29 @@ export default function Discover() {
 
     const currentUser = users[users.length - 1];
 
-    // Show animation immediately
-    setCurrentAction(action);
-
     // Call API
     try {
-      let type = "like";
-      if (action === "dislike") type = "nope";
-      if (action === "favorite") type = "superlike"; // Blue Star
+      if (action === "like") {
+        // Single Tap -> Favorite (Bookmark)
+        await API.post("/favorite", { userId: currentUser._id });
+        addToast("Added to Favorites ⭐️", "success");
+        setCurrentAction('like'); // Use Heart animation for favorite
+      } else {
+        // Other actions (Dislike, Super Like) follow swipe logic
+        let type = "nope";
+        if (action === "favorite") type = "superlike"; // Blue Star
 
-      const res = await API.post("/swipe", {
-        userId: currentUser._id,
-        type
-      });
+        const res = await API.post("/swipe", {
+          userId: currentUser._id,
+          type
+        });
 
-      if (res.data.matched) {
-        setTimeout(() => addToast("It's a Match! ❤️", "success"), 500);
+        // Show animation ONLY after success
+        setCurrentAction(action);
+
+        if (res.data.matched) {
+          setTimeout(() => addToast("It's a Match! ❤️", "success"), 500);
+        }
       }
 
       // 🎥 Animate Card Exit ONLY on success
@@ -161,29 +169,59 @@ export default function Discover() {
         setCurrentAction(null); // Reset action visual
         return; // Stop execution, keep card
       }
-      console.error("Swipe Action Failed", err);
+      console.error("Action Failed", err);
     }
   };
 
-  // Double-tap/click handling using Ref for instant state updates
-  const clickTimeoutRef = useRef(null);
+  // Custom Touch Handling for Taps (to coexist with Swipes)
+  const touchStartTime = useRef(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
-  const handleImageClick = (e) => {
-    // 🖥️ Desktop: STRICTLY Disable all tap interactions (Buttons Only)
-    if (window.innerWidth >= 1024) return;
+  const handleInteractionStart = (clientX, clientY) => {
+    touchStartTime.current = Date.now();
+    touchStartX.current = clientX;
+    touchStartY.current = clientY;
+  };
 
-    if (clickTimeoutRef.current) {
-      // 📱 Mobile Double Tap -> Super Like
-      clearTimeout(clickTimeoutRef.current);
-      clickTimeoutRef.current = null;
-      handleButtonAction('favorite');
-    } else {
-      // 📱 Mobile Single Tap -> Like (Fav)
-      clickTimeoutRef.current = setTimeout(() => {
-        handleButtonAction('like');
+  const handleCardTouchStart = (e) => {
+    handleInteractionStart(e.touches[0].clientX, e.touches[0].clientY);
+  };
+
+  const handleCardMouseDown = (e) => {
+    handleInteractionStart(e.clientX, e.clientY);
+  };
+
+  const handleInteractionEnd = (clientX, clientY) => {
+    // Only process if it's a tap/click (short duration, little movement)
+
+    const duration = Date.now() - touchStartTime.current;
+    const moveX = Math.abs(clientX - touchStartX.current);
+    const moveY = Math.abs(clientY - touchStartY.current);
+
+    if (duration < 300 && moveX < 20 && moveY < 20) {
+      // It's a tap!
+      if (clickTimeoutRef.current) {
+        // Double Tap -> Super Like
+        clearTimeout(clickTimeoutRef.current);
         clickTimeoutRef.current = null;
-      }, 300);
+        handleButtonAction('favorite');
+      } else {
+        // Single Tap -> Favorite (mapped to 'like' button action which now calls favorite)
+        clickTimeoutRef.current = setTimeout(() => {
+          handleButtonAction('like');
+          clickTimeoutRef.current = null;
+        }, 300);
+      }
     }
+  };
+
+  const handleCardTouchEnd = (e) => {
+    handleInteractionEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  };
+
+  const handleCardMouseUp = (e) => {
+    handleInteractionEnd(e.clientX, e.clientY);
   };
 
   const handleInfoClick = (user, e) => {
@@ -253,7 +291,7 @@ export default function Discover() {
 
       {/* Card Stack */}
       {!selectedUser && (
-        <div className="flex justify-center items-center h-full pb-20 pt-4">
+        <div className="flex justify-center items-center h-full">
           {users.length === 0 && (
             <div className="text-center text-gray-400 p-10">
               <p className="text-xl">No more profiles.</p>
@@ -356,9 +394,12 @@ export default function Discover() {
 
                         {/* Image Area - Handles Taps */}
                         <div
-                          className="h-3/4 w-full bg-cover bg-center"
+                          className="h-3/4 w-full bg-cover bg-center touch-manipulation"
                           style={{ backgroundImage: `url(${user.photos?.[0]?.url || 'https://via.placeholder.com/400'})` }}
-                          onClick={handleImageClick}
+                          onTouchStart={handleCardTouchStart}
+                          onTouchEnd={handleCardTouchEnd}
+                          onMouseDown={handleCardMouseDown}
+                          onMouseUp={handleCardMouseUp}
                         >
                           <div className="absolute inset-0  opacity-50 bg-gradient-to-b from-transparent via-transparent to-black/20"></div>
                         </div>
@@ -423,7 +464,7 @@ export default function Discover() {
           </button>
 
           <button
-            onClick={() => handleButtonAction('favorite')}
+            onClick={() => handleButtonAction('like')} // Star now triggers Favorite (mapped to 'like' logic)
             className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full shadow-xl flex items-center justify-center text-blue-500 hover:scale-110 active:scale-95 transition-transform border-2 border-blue-100"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
@@ -432,8 +473,16 @@ export default function Discover() {
           </button>
 
           <button
-            onClick={() => handleButtonAction('like')}
+            // Heart now triggers Super Like (mapped to 'favorite' -> 'superlike' logic)
+            // Let's re-read the code.
+            // In handleButtonAction:
+            // if (action === "like") -> API.post("/favorite")
+            // else if (action === "favorite") -> type = "superlike" -> API.post("/swipe", type="superlike")
+
+            // So:
+            // Passing 'like' -> Favorite.
             className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-pink-500 to-red-500 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-transform"
+            onClick={() => handleButtonAction('favorite')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -442,12 +491,12 @@ export default function Discover() {
         </div>
       )}
 
-      {/* Full Profile Modal ... (unchanged) */}
+      {/* Full Profile Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 bg-white overflow-y-auto animate-slide-up">
+        <div className="fixed inset-0 top-16 z-50 bg-white overflow-y-auto animate-slide-up border-t border-gray-200">
           <button
             onClick={() => setSelectedUser(null)}
-            className="absolute top-4 right-4 z-50 bg-black/20 p-2 rounded-full text-white hover:bg-black/40"
+            className="fixed top-20 right-4 z-[60] bg-black/40 p-2 rounded-full text-white hover:bg-black/60 backdrop-blur-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />

@@ -14,6 +14,8 @@ const {
   getWhoLikedMe,
   unmatchUser,
   reportUser,
+  addFavorite,
+  getFavorites,
   getUserById
 } = require("../controllers/userController");
 
@@ -21,6 +23,8 @@ router.get("/me", auth, getProfile);
 router.put("/profile", auth, updateProfile);
 router.get("/discover", auth, discover);
 router.post("/like", auth, likeUser);
+router.post("/favorite", auth, addFavorite); // Add Favorite
+router.get("/favorites", auth, getFavorites); // Get Favorites List
 router.get("/matches", auth, getMatches);
 router.delete("/", auth, deleteAccount);
 

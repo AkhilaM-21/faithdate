@@ -10,6 +10,7 @@ export default function Profile() {
   const [activeSection, setActiveSection] = useState(null);
   const [formData, setFormData] = useState({});
   const [viewsData, setViewsData] = useState(null);
+  const [favorites, setFavorites] = useState(null); // Favorites State
   const [verifying, setVerifying] = useState(false);
 
   // Camera Refs & State
@@ -183,6 +184,16 @@ export default function Profile() {
       setViewsData(res.data);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await API.get("/users/favorites");
+      setFavorites(res.data);
+    } catch (err) {
+      console.error(err);
+      addToast("Failed to load favorites", "error");
     }
   };
 
@@ -542,6 +553,16 @@ export default function Profile() {
                   <span className="text-gray-400">›</span>
                 </button>
 
+                <button onClick={() => { setActiveSection('favorites'); fetchFavorites(); }} className="w-full text-left py-3 border-b border-gray-100 text-gray-700 font-medium flex justify-between items-center hover:bg-gray-50 px-2 rounded-lg transition">
+                  <span className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    My Favorites
+                  </span>
+                  <span className="text-gray-400">›</span>
+                </button>
+
                 <button onClick={() => navigate('/settings')} className="w-full text-left py-3 text-gray-700 font-medium flex justify-between items-center hover:bg-gray-50 px-2 rounded-lg transition">
                   <span className="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -553,6 +574,42 @@ export default function Profile() {
             </div>
           </div>
         </>
+      ) : activeSection === 'favorites' ? (
+        /* ═══════════ Favorites Screen ═══════════ */
+        <div className="p-4 pt-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">My Favorites</h1>
+            <button onClick={() => setActiveSection(null)} className="text-gray-500 font-medium hover:text-gray-800">Back</button>
+          </div>
+
+          {!favorites ? (
+            <div className="flex justify-center p-10"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-500"></div></div>
+          ) : favorites.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4">
+              {favorites.map((fav) => (
+                <div key={fav._id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 relative">
+                  <div className="h-32 bg-gray-200 bg-cover bg-center" style={{ backgroundImage: `url(${fav.photos?.[0]?.url || 'https://via.placeholder.com/150'})` }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  </div>
+                  <div className="p-3 absolute bottom-0 w-full text-white">
+                    <p className="font-bold text-sm truncate">{fav.first_name}, {fav.age}</p>
+                    <p className="text-[10px] opacity-90 truncate">{fav.location || "Nearby"}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-white rounded-2xl shadow-sm">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-800">No Favorites Yet</h3>
+              <p className="text-gray-500 text-sm mt-1 px-6">Use the star button on the Discover page to save people here!</p>
+            </div>
+          )}
+        </div>
       ) : activeSection === 'photos' ? (
         /* ═══════════ Photos Edit Screen ═══════════ */
         <div className="p-4 pt-6">

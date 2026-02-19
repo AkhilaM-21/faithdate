@@ -54,6 +54,9 @@ const userSchema = new mongoose.Schema({
   spamScore: { type: Number, default: 0 },
   isShadowBanned: { type: Boolean, default: false }, // Ghost visibility
 
+  // Favorites (Bookmarks)
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
   // Profile Views
   profileViews: [{
     viewer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
