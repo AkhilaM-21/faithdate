@@ -208,7 +208,7 @@ export default function Profile() {
           {/* 1. Profile Header */}
           <div className="relative bg-white pb-6 shadow-sm">
             {/* Cover Background */}
-            <div className="h-32 w-full bg-gradient-to-r from-pink-400 to-purple-500 relative">
+            <div className="h-32 w-full bg-gradient-to-r from-rose-400 to-pink-500 relative">
               <div className="absolute inset-0 bg-black/10"></div>
             </div>
 
@@ -495,10 +495,10 @@ export default function Profile() {
                       <p className="text-sm text-gray-400">No viewers yet</p>
                     )
                   ) : (
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100">
-                      <p className="text-sm font-bold text-purple-700 mb-1">🔒 Premium Feature</p>
-                      <p className="text-xs text-purple-600">Upgrade to see who viewed your profile</p>
-                      <button className="mt-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-md hover:shadow-lg transition">
+                    <div className="bg-gradient-to-r from-rose-50 to-pink-50 p-4 rounded-xl border border-rose-100">
+                      <p className="text-sm font-bold text-rose-700 mb-1">🔒 Premium Feature</p>
+                      <p className="text-xs text-rose-600">Upgrade to see who viewed your profile</p>
+                      <button className="mt-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-md hover:shadow-lg transition">
                         Upgrade to Premium
                       </button>
                     </div>

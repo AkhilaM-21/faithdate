@@ -13,7 +13,7 @@ export default function Landing() {
 
             {/* Dynamic Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90"></div>
-            <div className="absolute inset-0 bg-gradient-to-tr from-pink-900/40 to-purple-900/40 mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-rose-900/40 to-pink-900/40 mix-blend-overlay"></div>
 
             {/* Main Content Card */}
             <div className="relative z-10 text-center px-6 max-w-lg w-full">
@@ -25,7 +25,7 @@ export default function Landing() {
                     </span>
                     <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-tight drop-shadow-lg font-serif">
                         Find Your <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400">
                             Soulmate
                         </span>
                     </h1>
@@ -38,7 +38,7 @@ export default function Landing() {
                 <div className="space-y-4 animate-fade-in-up delay-200">
                     <Link
                         to="/register"
-                        className="block w-full py-4 rounded-full bg-gradient-to-r from-pink-600 to-rose-600 text-white font-bold text-lg shadow-xl shadow-rose-500/30 hover:scale-[1.02] hover:shadow-rose-500/50 active:scale-[0.98] transition-all duration-300"
+                        className="block w-full py-4 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-lg shadow-xl shadow-rose-500/30 hover:scale-[1.02] hover:shadow-rose-500/50 active:scale-[0.98] transition-all duration-300"
                     >
                         Get Started
                     </Link>
@@ -57,8 +57,8 @@ export default function Landing() {
             </div>
 
             {/* Decorative Floating Elements (Subtle) */}
-            <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-pink-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-rose-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
 
         </div>
     );

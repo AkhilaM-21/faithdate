@@ -59,10 +59,10 @@ export default function Login() {
 
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
 
       {/* Main Card */}
-      <div className="relative w-full max-w-4xl bg-gradient-to-br from-[#ff9a9e] via-[#fecfef] to-[#ffdde1] rounded-[40px] shadow-[0_30px_60px_-12px_rgba(50,50,93,0.25),0_18px_36px_-18px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.005] duration-500">
+      <div className="relative w-full max-w-4xl bg-gradient-to-br from-rose-300 via-pink-200 to-rose-200 rounded-[40px] shadow-[0_30px_60px_-12px_rgba(50,50,93,0.25),0_18px_36px_-18px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.005] duration-500">
 
         {/* Internal Floating Clouds */}
         <div className="absolute inset-0 pointer-events-none">
@@ -110,7 +110,7 @@ export default function Login() {
                 name="email"
                 placeholder="Enter your email"
                 onChange={handleChange}
-                className="w-full px-6 py-4 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-pink-500 focus:shadow-pink-200/50 transition-all duration-300 outline-none"
+                className="w-full px-6 py-4 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 focus:shadow-rose-200/50 transition-all duration-300 outline-none"
               />
             </div>
 
@@ -121,15 +121,15 @@ export default function Login() {
                 type="password"
                 placeholder="Enter your password"
                 onChange={handleChange}
-                className="w-full px-6 py-4 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-pink-500 focus:shadow-pink-200/50 transition-all duration-300 outline-none"
+                className="w-full px-6 py-4 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 focus:shadow-rose-200/50 transition-all duration-300 outline-none"
               />
             </div>
 
             <div className="flex justify-end pt-1">
-              <a href="#" className="text-sm font-bold text-pink-600 hover:text-pink-800 transition-colors drop-shadow-sm">Forgot Password?</a>
+              <a href="#" className="text-sm font-bold text-rose-600 hover:text-rose-800 transition-colors drop-shadow-sm">Forgot Password?</a>
             </div>
 
-            <button className="w-full relative group overflow-hidden bg-white text-pink-600 font-extrabold py-4 rounded-full shadow-[0_10px_20px_-10px_rgba(255,255,255,0.5)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 border-2 border-white/50">
+            <button className="w-full relative group overflow-hidden bg-white text-rose-600 font-extrabold py-4 rounded-full shadow-[0_10px_20px_-10px_rgba(255,255,255,0.5)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 border-2 border-white/50">
               <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
                 Sign In
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +187,7 @@ export default function Login() {
 
           <div className="mt-6 text-center text-gray-700">
             <span className="font-medium">Don't have an account? </span>
-            <Link to="/register" className="text-pink-700 font-bold hover:text-pink-900 hover:underline transition-all drop-shadow-sm">Register Now</Link>
+            <Link to="/register" className="text-rose-700 font-bold hover:text-rose-900 hover:underline transition-all drop-shadow-sm">Register Now</Link>
           </div>
         </div>
       </div>

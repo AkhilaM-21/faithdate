@@ -174,7 +174,7 @@ export default function AccountSettings() {
 
                 {/* ─── Account Info Card ─── */}
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <div className="bg-gradient-to-r from-pink-500 via-rose-400 to-purple-500 p-6">
+                    <div className="bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 p-6">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-2xl font-bold text-white border-2 border-white/30">
                                 {account?.first_name?.charAt(0) || "U"}
@@ -392,8 +392,8 @@ export default function AccountSettings() {
                 <div className="bg-white rounded-2xl shadow-sm p-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
                             </div>
@@ -407,7 +407,7 @@ export default function AccountSettings() {
                         <button
                             onClick={handleToggleNotifications}
                             className={`relative w-14 h-8 rounded-full transition-all duration-300 ${account?.notificationsEnabled
-                                ? "bg-gradient-to-r from-purple-500 to-pink-500"
+                                ? "bg-gradient-to-r from-rose-500 to-pink-500"
                                 : "bg-gray-300"
                                 }`}
                         >

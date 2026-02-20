@@ -79,11 +79,11 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-white">
 
       {/* Background Decor */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
 
       {/* Main Card */}
-      <div className="relative w-full max-w-4xl bg-gradient-to-br from-[#a18cd1] via-[#fbc2eb] to-[#ff9a9e] rounded-[40px] shadow-[0_30px_60px_-12px_rgba(50,50,93,0.25),0_18px_36px_-18px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.005] duration-500">
+      <div className="relative w-full max-w-4xl bg-gradient-to-br from-rose-400 via-pink-400 to-rose-300 rounded-[40px] shadow-[0_30px_60px_-12px_rgba(50,50,93,0.25),0_18px_36px_-18px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col md:flex-row transform transition-all hover:scale-[1.005] duration-500">
 
         {/* Internal Floating Clouds */}
         <div className="absolute inset-0 pointer-events-none">
@@ -93,7 +93,7 @@ export default function Register() {
           <div className="absolute bottom-[20%] right-[55%] animate-float opacity-60" style={{ animationDelay: '3s' }}>
             <svg width="160" height="100" viewBox="0 0 120 80" fill="white" className="drop-shadow-sm"><path d="M40 60C40 71 49 80 60 80H100C111 80 120 71 120 60C120 49 111 40 100 40C98 40 96 40.4 94.2 41C92.4 29 82.2 20 70 20C69 20 68 20 67 20.2C64.2 8.6 53.8 0 41.6 0C27.6 0 15.8 9.6 12.4 22.8C5.4 24.6 0 30.8 0 38.4C0 46.8 6 53.8 14 55.6C14 57 14 58.6 14 60H40Z" /></svg>
           </div>
-          <div className="absolute top-[20%] right-[30%] w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply opacity-20 blur-3xl animate-pulse-slow"></div>
+          <div className="absolute top-[20%] right-[30%] w-40 h-40 bg-rose-300 rounded-full mix-blend-multiply opacity-20 blur-3xl animate-pulse-slow"></div>
           <div className="absolute bottom-[10%] left-[20%] w-60 h-60 bg-pink-200 rounded-full mix-blend-multiply opacity-30 blur-3xl animate-blob"></div>
         </div>
 
@@ -132,7 +132,7 @@ export default function Register() {
                 name="first_name"
                 placeholder="Ex. John"
                 onChange={handleChange}
-                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-purple-500 focus:shadow-purple-200/50 transition-all duration-300 outline-none"
+                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 focus:shadow-rose-200/50 transition-all duration-300 outline-none"
               />
             </div>
 
@@ -143,7 +143,7 @@ export default function Register() {
                 type="email"
                 placeholder="Enter your email"
                 onChange={handleChange}
-                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-purple-500 focus:shadow-purple-200/50 transition-all duration-300 outline-none"
+                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 focus:shadow-rose-200/50 transition-all duration-300 outline-none"
               />
             </div>
 
@@ -154,7 +154,7 @@ export default function Register() {
                 type="password"
                 placeholder="Min 6 characters"
                 onChange={handleChange}
-                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-purple-500 focus:shadow-purple-200/50 transition-all duration-300 outline-none"
+                className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 focus:shadow-rose-200/50 transition-all duration-300 outline-none"
               />
             </div>
 
@@ -165,7 +165,7 @@ export default function Register() {
                   name="date_of_birth"
                   type="date"
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-purple-500 transition-all duration-300 outline-none"
+                  className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 transition-all duration-300 outline-none"
                 />
                 {form.date_of_birth && calculateAge(form.date_of_birth) < 18 && (
                   <p className="text-xs text-red-500 font-semibold ml-1">Must be 18+</p>
@@ -178,12 +178,12 @@ export default function Register() {
                   type="tel"
                   placeholder="+1234567890"
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-purple-500 transition-all duration-300 outline-none"
+                  className="w-full px-5 py-3.5 rounded-xl bg-white border-none ring-1 ring-white/50 placeholder:text-gray-400 text-gray-800 shadow-[0_4px_10px_rgba(0,0,0,0.05)] focus:ring-2 focus:ring-rose-500 transition-all duration-300 outline-none"
                 />
               </div>
             </div>
 
-            <button className="w-full mt-3 relative group overflow-hidden bg-white text-purple-600 font-extrabold py-4 rounded-full shadow-[0_10px_20px_-10px_rgba(255,255,255,0.5)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 border-2 border-white/50">
+            <button className="w-full mt-3 relative group overflow-hidden bg-white text-rose-600 font-extrabold py-4 rounded-full shadow-[0_10px_20px_-10px_rgba(255,255,255,0.5)] transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-95 border-2 border-white/50">
               <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
                 Create Account
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -241,7 +241,7 @@ export default function Register() {
 
           <div className="mt-6 text-center text-gray-700">
             <span className="font-medium">Already have an account? </span>
-            <Link to="/" className="text-purple-700 font-bold hover:text-purple-900 hover:underline transition-all drop-shadow-sm">Sign In</Link>
+            <Link to="/" className="text-rose-700 font-bold hover:text-rose-900 hover:underline transition-all drop-shadow-sm">Sign In</Link>
           </div>
         </div>
       </div>

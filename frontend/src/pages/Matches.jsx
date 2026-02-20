@@ -68,15 +68,57 @@ export default function Matches() {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
+  const getExpiryTime = (dateStr) => {
+    const matchTime = new Date(dateStr).getTime();
+    const expiryTime = matchTime + 24 * 60 * 60 * 1000; // 24 hours
+    const now = Date.now();
+    const diff = expiryTime - now;
+    if (diff <= 0) return null;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    return `${hours}h left`;
+  };
+
   if (!currentUser) return <div className="p-10 text-center">Loading...</div>;
 
   return (
     <div className="p-4 pb-24 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-8 text-center">
+      <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-600 mb-8 text-center">
         Your Matches
       </h1>
 
-
+      {/* 👁️ Profile View Indicator (Premium Trigger) */}
+      <div className="max-w-6xl mx-auto px-4 mb-8">
+        <div 
+          className="bg-white rounded-2xl p-4 shadow-sm border border-pink-100 flex items-center justify-between cursor-pointer hover:bg-pink-50 transition-colors group"
+          onClick={() => navigate('/profile')} // Or open upgrade modal
+        >
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    👁️
+                </div>
+                <div>
+                    <p className="font-bold text-gray-800 text-sm">
+                        3 people viewed your profile today
+                    </p>
+                    <p className="text-xs text-pink-500 font-bold mt-0.5">
+                        {likesData?.tier === 'gold' ? "See who they are" : "Upgrade to see who"}
+                    </p>
+                </div>
+            </div>
+            <div className="flex -space-x-3">
+                {[1, 2, 3].map((_, i) => (
+                    <div key={i} className={`w-9 h-9 rounded-full border-2 border-white bg-gray-200 overflow-hidden ${likesData?.tier !== 'gold' ? 'blur-[2px]' : ''}`}>
+                        <img src={`https://i.pravatar.cc/150?u=${i + 10}`} alt="" className="w-full h-full object-cover" />
+                    </div>
+                ))}
+                {likesData?.tier !== 'gold' && (
+                  <div className="w-9 h-9 rounded-full border-2 border-white bg-gray-900/50 flex items-center justify-center text-[10px] text-white font-bold backdrop-blur-sm">
+                    +
+                  </div>
+                )}
+            </div>
+        </div>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 mb-6">
         <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -100,8 +142,16 @@ export default function Matches() {
             className="bg-white rounded-3xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300 border border-pink-100"
             style={{ animationDelay: `${index * 100}ms` }}
           >
+            {/* ⏳ Match Expiry Timer */}
+            {getExpiryTime(match.lastMessageTime) && (
+              <div className="absolute top-3 right-3 bg-orange-100/90 backdrop-blur-sm text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm z-20 border border-orange-200">
+                  <span className="animate-pulse">⏳</span>
+                  <span>{getExpiryTime(match.lastMessageTime)}</span>
+              </div>
+            )}
+
             {/* Colliding Hearts Animation Area */}
-            <div className="h-64 bg-gradient-to-br from-pink-50 to-purple-50 relative overflow-hidden flex items-center justify-center">
+            <div className="h-64 bg-gradient-to-br from-rose-50 to-pink-50 relative overflow-hidden flex items-center justify-center">
 
               {/* Left Heart (Current User) */}
               <div className="absolute left-[15%] z-10 hover:z-30 animate-collide-left transition-all duration-300">
@@ -123,7 +173,7 @@ export default function Matches() {
                   <div className="w-32 h-32 relative drop-shadow-2xl filter">
                     <img
                       src={match.user?.photos?.[0]?.url}
-                      className="w-full h-full object-cover bg-purple-200 translate-y-4 scale-110"
+                      className="w-full h-full object-cover bg-rose-200 translate-y-4 scale-110"
                       style={{ clipPath: 'url(#heart-clip)' }}
                       alt={match.user?.first_name}
                     />
@@ -151,7 +201,7 @@ export default function Matches() {
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => navigate(`/chat/${match._id}`)}
-                  className="w-full py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
                 >
                   <span>Chat</span>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

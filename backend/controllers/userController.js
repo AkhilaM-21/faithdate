@@ -505,7 +505,7 @@ exports.addFavorite = async (req, res) => {
     const { userId } = req.body;
     const currentUser = await User.findById(req.user.id);
 
-    if (!currentUser.favorites.includes(userId)) {
+    if (!currentUser.favorites.some(id => id.toString() === userId)) {
       currentUser.favorites.push(userId);
       await currentUser.save();
       res.json({ msg: "Added to Favorites" });
