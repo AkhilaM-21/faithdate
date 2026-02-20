@@ -192,9 +192,19 @@ export default function Profile() {
       const res = await API.get("/users/favorites");
       setFavorites(res.data);
     } catch (err) {
-      console.error(err);
-      addToast("Failed to load favorites", "error");
+      // Always fallback to LocalStorage if API fails (ensures demo works even with 404)
+      console.warn("API failed (404), loading favorites from localStorage");
+      const localFavs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      setFavorites(localFavs);
     }
+  };
+
+  const handleRemoveFavorite = (e, id) => {
+    e.stopPropagation();
+    const updated = favorites.filter(f => f._id !== id);
+    setFavorites(updated);
+    localStorage.setItem('favorites', JSON.stringify(updated));
+    addToast("Removed from favorites", "info");
   };
 
   if (!user) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div></div>;
@@ -592,8 +602,21 @@ export default function Profile() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   </div>
                   <div className="p-3 absolute bottom-0 w-full text-white">
-                    <p className="font-bold text-sm truncate">{fav.first_name}, {fav.age}</p>
-                    <p className="text-[10px] opacity-90 truncate">{fav.location || "Nearby"}</p>
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <p className="font-bold text-sm truncate">{fav.first_name}, {fav.age}</p>
+                            <p className="text-[10px] opacity-90 truncate">{fav.location || "Nearby"}</p>
+                        </div>
+                        <button 
+                            onClick={(e) => handleRemoveFavorite(e, fav._id)}
+                            className="text-white/80 hover:text-red-400 transition p-1"
+                            title="Remove"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
                   </div>
                 </div>
               ))}

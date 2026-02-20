@@ -14,7 +14,7 @@ const MOOD_GIFS = [
   "https://media.tenor.com/l5_u4J0x13kAAAAM/funny-laugh.gif"
 ];
 
-const socket = io("http://localhost:5000");
+const socket = io("http://localhost:8000");
 
 export default function Chat() {
   const { matchId } = useParams();
@@ -24,6 +24,7 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(null);
   const [matchUser, setMatchUser] = useState(null);
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(true);
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false); // Other user typing status
   const [showMenu, setShowMenu] = useState(false);
@@ -35,6 +36,7 @@ export default function Chat() {
     // 1. Fetch Current User & Match Messages
     const initChat = async () => {
       setMessages([]); // Clear previous messages
+      setLoading(true);
       try {
         const userRes = await API.get("/users/me");
         setCurrentUser(userRes.data);
@@ -54,6 +56,8 @@ export default function Chat() {
         }
       } catch (err) {
         console.error("Chat init error", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -186,10 +190,12 @@ export default function Chat() {
     }
   };
 
-  if (!currentUser) return <div className="p-4 text-center">Loading chat...</div>;
+  if (loading) return <div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div></div>;
+
+  if (!currentUser) return <div className="p-4 text-center">Failed to load chat.</div>;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-[100dvh] bg-gray-50 relative">
 
       {/* ── HEADER ── */}
       <div className="bg-white px-4 py-3 shadow-sm flex items-center justify-between z-50 sticky top-0">
@@ -295,7 +301,7 @@ export default function Chat() {
       </div>
 
       {/* ── INPUT AREA ── */}
-      <div className="fixed bottom-0 w-full bg-white px-3 py-3 border-t border-gray-100 flex items-center gap-2 pb-safe z-50">
+      <div className="fixed bottom-0 left-0 w-full bg-white px-3 py-3 border-t border-gray-100 flex items-center gap-2 pb-safe z-[60]">
 
         {/* GIF Picker Toggle */}
         <div className="relative">

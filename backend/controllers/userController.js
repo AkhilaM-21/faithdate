@@ -503,7 +503,12 @@ exports.reportUser = async (req, res) => {
 exports.addFavorite = async (req, res) => {
   try {
     const { userId } = req.body;
+    if (!userId) return res.status(400).json({ msg: "User ID is required" });
+
     const currentUser = await User.findById(req.user.id);
+    if (!currentUser) return res.status(404).json({ msg: "User not found" });
+
+    if (!currentUser.favorites) currentUser.favorites = [];
 
     if (!currentUser.favorites.some(id => id.toString() === userId)) {
       currentUser.favorites.push(userId);

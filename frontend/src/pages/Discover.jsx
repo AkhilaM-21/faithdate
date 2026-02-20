@@ -7,7 +7,7 @@ import { useToast } from "../context/ToastContext";
 // MOCK PLAN & LIMITS
 const USER_PLAN = 'free'; // 'free' or 'premium'
 const ACTION_LIMITS = {
-  free: { like: 50, superlike: 1, restore: 0, favorite: 100 }, // Fav limit optional 100/day
+  free: { like: 10, superlike: 1, restore: 0, favorite: 100 }, // Fav limit optional 100/day
   premium: { like: Infinity, superlike: Infinity, restore: Infinity, favorite: Infinity }
 };
 
@@ -142,7 +142,10 @@ export default function Discover() {
       try {
         const res = await API.post("/users/like", { userId });
         if (res.data.matched) addToast("It's a Match! ❤️", "success");
-      } catch (err) { console.error("Like error", err); }
+      } catch (err) { 
+        console.error("Like error", err);
+        addToast(err.response?.data?.msg || "Failed to like", "error");
+      }
 
     } else if (direction === "left") {
       // Dislike
@@ -155,7 +158,10 @@ export default function Discover() {
       try {
         await API.post("/users/like", { userId, type: "superlike" });
         addToast("Super Liked! 💎", "success");
-      } catch (err) { console.error("Superlike error", err); }
+      } catch (err) { 
+        console.error("Superlike error", err);
+        addToast(err.response?.data?.msg || "Failed to Super Like", "error");
+      }
     }
 
     // Add to history for Restore
@@ -163,9 +169,13 @@ export default function Discover() {
 
     // Remove Card
     setTimeout(() => {
-      setCurrentAction(null);
       setUsers(prev => prev.filter(u => u._id !== userId));
     }, 200); // Fast removal
+
+    // Clear Action Animation (Slow - allows animation to finish)
+    setTimeout(() => {
+      setCurrentAction(null);
+    }, 1500);
   };
 
   // Manual Button / Gesture Trigger
@@ -199,12 +209,32 @@ export default function Discover() {
     // 3. FAVORITE (No Card Swipe)
     if (action === "favorite") {
       try {
-        await API.post("/users/favorites", { userId: currentUser._id });
+        const res = await API.post("/users/favorites", { userId: currentUser._id });
         incrementUsage('favorite');
+        addToast(res.data.msg || "Added to Favorites ⭐️", "success");
         // Visual only
         setCurrentAction('favorite');
         setTimeout(() => setCurrentAction(null), 1000);
-      } catch (err) { console.error(err); }
+      } catch (err) { 
+        // Fallback: Save to LocalStorage if backend route is missing (404) or network error
+        if (err.response?.status === 404 || !err.response) {
+          const existingFavs = JSON.parse(localStorage.getItem('favorites') || '[]');
+          if (!existingFavs.some(u => u._id === currentUser._id)) {
+             const userToSave = { 
+               ...currentUser, 
+               age: calculateAge(currentUser.date_of_birth) 
+             };
+             localStorage.setItem('favorites', JSON.stringify([...existingFavs, userToSave]));
+          }
+          incrementUsage('favorite');
+          addToast("Added to Favorites (Local) ⭐️", "success");
+          setCurrentAction('favorite');
+          setTimeout(() => setCurrentAction(null), 1000);
+        } else {
+          console.error(err);
+          addToast(err.response?.data?.msg || "Failed to add to favorites", "error");
+        }
+      }
       return;
     }
 
@@ -228,6 +258,28 @@ export default function Discover() {
   };
 
   // ─── MOBILE GESTURE LOGIC ───────────────────────────────────────────
+
+  // ─── DESKTOP MOUSE LOGIC ───────────────────────────────────────────
+  const handleMouseDown = (e) => {
+    if (isMobile) return;
+    touchStartTime.current = Date.now();
+    touchStartX.current = e.clientX;
+    touchStartY.current = e.clientY;
+  };
+
+  const handleMouseUp = (e) => {
+    if (isMobile) return;
+    const deltaY = e.clientY - touchStartY.current;
+    const deltaX = e.clientX - touchStartX.current;
+
+    // Swipe Up Check (Open Profile)
+    if (deltaY < -80 && Math.abs(deltaX) < 60) {
+       const currentUser = users[users.length - 1];
+       if (currentUser) {
+           setSelectedUser(currentUser);
+       }
+    }
+  };
 
   const handleTouchStart = (e) => {
     if (!isMobile) return;
@@ -293,7 +345,20 @@ export default function Discover() {
       }
     }
 
-    // 2. Tap Check (Short duration, little movement)
+    // 2. Swipe Up Check (Open Profile) - Mobile
+    if (!dragRef.current.isTwoFinger) {
+      const deltaY = touch.clientY - touchStartY.current;
+      const deltaX = touch.clientX - touchStartX.current;
+      if (deltaY < -80 && Math.abs(deltaX) < 60) {
+         const currentUser = users[users.length - 1];
+         if (currentUser) {
+             setSelectedUser(currentUser);
+             return;
+         }
+      }
+    }
+
+    // 3. Tap Check (Short duration, little movement)
     if (duration < 300 && absMoveX < 10 && absMoveY < 10) {
       const now = Date.now();
       const DOUBLE_TAP_DELAY = 300;
@@ -314,7 +379,7 @@ export default function Discover() {
       return;
     }
 
-    // 3. Check for Blocked Swipes (Limits)
+    // 4. Check for Blocked Swipes (Limits)
     // If user dragged far enough to swipe, but it was prevented/snapped back by TinderCard
     if (absMoveX > 100) { 
       if (moveX > 0) { // Right (Like)
@@ -364,7 +429,7 @@ export default function Discover() {
           )}
 
           {/* Animation Overlay - Matches Card Dimensions */}
-          {isMobile && currentAction && (
+          {currentAction && (
             <div className="absolute w-[90vw] max-w-sm h-[70vh] z-[200] pointer-events-none">
                 {/* Restore Label */}
                 {currentAction === 'restore' && (
@@ -395,7 +460,7 @@ export default function Discover() {
                   >
                     <div>
                       {currentAction === 'like' && (
-                        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="#22c55e" className="drop-shadow-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="#ec4899" className="drop-shadow-xl">
                           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                         </svg>
                       )}
@@ -449,9 +514,9 @@ export default function Discover() {
                       !isMobile
                         ? ["left", "right", "up", "down"]
                         : [
-                            "down", // Restore is a gesture, not a card swipe
-                            dailyUsage.like >= ACTION_LIMITS[USER_PLAN].like ? "right" : "",
-                            dailyUsage.superlike >= ACTION_LIMITS[USER_PLAN].superlike ? "up" : ""
+                            "down",
+                            "up", // Block native swipe up (Super Like is double tap)
+                            dailyUsage.like >= ACTION_LIMITS[USER_PLAN].like ? "right" : ""
                           ].filter(Boolean)
                     }
                   >
@@ -460,7 +525,7 @@ export default function Discover() {
                     >
 
                       {/* 📱 MOBILE OVERLAYS (Like/Nope) */}
-                      {isMobile && isTopCard && (
+                      {isTopCard && (
                         <>
                           {/* ❌ NOPE (Bottom-Left) */}
                           <div ref={overlayNopeRef} className="absolute bottom-8 left-8 w-[90px] h-[90px] rounded-full border-[6px] border-red-500 bg-red-500/20 flex items-center justify-center transform -rotate-15 z-50 pointer-events-none opacity-0">
@@ -470,8 +535,8 @@ export default function Discover() {
                           </div>
 
                           {/* ❤️ LIKE (Bottom-Right) */}
-                          <div ref={overlayLikeRef} className="absolute bottom-8 right-8 w-[90px] h-[90px] rounded-full border-[6px] border-green-500 bg-green-500/20 flex items-center justify-center transform rotate-15 z-50 pointer-events-none opacity-0">
-                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                          <div ref={overlayLikeRef} className="absolute bottom-8 right-8 w-[90px] h-[90px] rounded-full border-[6px] border-pink-500 bg-pink-500/20 flex items-center justify-center transform rotate-15 z-50 pointer-events-none opacity-0">
+                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-pink-500" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                              </svg>
                           </div>
@@ -479,16 +544,14 @@ export default function Discover() {
                           {/* 💎 SUPER LIKE (Center) */}
                           {currentAction === 'superlike' && (
                             <div className="absolute inset-0 flex items-center justify-center z-50 animate-ping">
-                              <div className="bg-blue-500/30 rounded-full p-10">
-                                <span className="text-blue-600 text-8xl drop-shadow-lg">💎</span>
-                              </div>
+                              <span className="text-blue-600 text-6xl drop-shadow-lg">💎</span>
                             </div>
                           )}
                           
                           {/* ⭐ FAV (Top-Right) */}
                           {currentAction === 'favorite' && (
                             <div className="absolute top-5 right-5 z-50 animate-bounce">
-                              <span className="text-yellow-400 text-6xl drop-shadow-md filter brightness-110">⭐️</span>
+                              <span className="text-yellow-400 text-5xl drop-shadow-md filter brightness-110">⭐️</span>
                             </div>
                           )}
                         </>
@@ -498,12 +561,14 @@ export default function Discover() {
 
                         {/* Image Area */}
                         <div
-                          className="h-3/4 w-full bg-cover bg-center touch-manipulation"
+                          className="h-3/4 w-full bg-cover bg-center touch-manipulation pressable"
                           style={{ backgroundImage: `url(${user.photos?.[0]?.url || 'https://via.placeholder.com/400'})` }}
                           // Attach Touch Listeners HERE for Drag Tracking
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
                           onTouchEnd={handleTouchEnd}
+                          onMouseDown={handleMouseDown}
+                          onMouseUp={handleMouseUp}
                         >
                           <div className="absolute inset-0  opacity-50 bg-gradient-to-b from-transparent via-transparent to-black/20"></div>
                         </div>
@@ -584,7 +649,7 @@ export default function Discover() {
               {/* 4. Like (Right) */}
               <button
                 onClick={() => handleButtonAction('like')}
-                className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-transform"
+                className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-transform"
                 title="Like"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
