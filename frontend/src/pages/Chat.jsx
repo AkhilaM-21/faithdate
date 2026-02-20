@@ -14,7 +14,7 @@ const MOOD_GIFS = [
   "https://media.tenor.com/l5_u4J0x13kAAAAM/funny-laugh.gif"
 ];
 
-const socket = io("http://localhost:8000");
+const socket = io("https://faithdate.onrender.com");
 
 export default function Chat() {
   const { matchId } = useParams();
